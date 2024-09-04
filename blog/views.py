@@ -12,16 +12,28 @@ from .forms import CommentForm, PostForm
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from django.http import HttpResponse
+
 import logging
 
 
 logger = logging.getLogger(__name__)
 
+def test_view(request):
+    return HttpResponse("Test view is working!")
+
+# def post_list(request):
+#     logger.info(f"Entering post_list view")
+#     logger.info(f"Messages in post_list: {list(messages.get_messages(request))}")
+#     posts = Post.objects.all().order_by('-created_at')
+#     return render(request, 'blog/post_list.html', {'posts': posts})
 
 def post_list(request):
-    logger.info(f"Entering post_list view")
-    logger.info(f"Messages in post_list: {list(messages.get_messages(request))}")
+    print("Entering post_list view")
     posts = Post.objects.all().order_by('-created_at')
+    print(f"Number of posts: {posts.count()}")
+    for post in posts:
+        print(f"Post: {post.title}")
     return render(request, 'blog/post_list.html', {'posts': posts})
 
 def post_detail(request, pk):

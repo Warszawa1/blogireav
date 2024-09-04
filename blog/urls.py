@@ -10,5 +10,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),  # Use custom login view
     path('logout/', views.logout_view, name='logout'),  # Updated to use custom logout view
     path('about/', views.about, name='about'),
+    path('test/', views.test_view, name='test_view'),
+
     # ... other paths ...
 ]
