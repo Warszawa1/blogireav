@@ -1,0 +1,59 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+<article class="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-6">
+        <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
+        <div class="prose max-w-none mb-6">
+            {% autoescape off %}
+                {{ post.content }}
+            {% endautoescape %}
+        </div>
+        <p class="text-sm text-gray-600 mb-4">Posted by {{ post.author }} on {{ post.created_at|date:"F d, Y" }}</p>
+
+
+        {% if post.image %}
+        <div class="mt-6 flex justify-center">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-auto rounded-lg shadow-md">
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="p-6 bg-gray-50">
+        <h2 class="text-xl font-bold mb-4">Comments</h2>
+        {% for comment in comments %}
+            <div class="bg-white p-4 rounded-lg shadow mb-4">
+                <p class="mb-2">{{ comment.content }}</p>
+                <p class="text-sm text-gray-600">By {{ comment.author }} on {{ comment.created_at|date:"F d, Y" }}</p>
+            </div>
+        {% empty %}
+            <p class="text-gray-600">No comments yet.</p>
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+            <form method="post" class="mt-6">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    Add Comment
+                </button>
+            </form>
+        {% else %}
+            <p class="mt-6 text-gray-600">Please <a href="{% url 'login' %}" class="text-blue-500 hover:underline">log in</a> to add a comment.</p>
+        {% endif %}
+    </div>
+</article>
+
+<style>
+    .prose img {
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+    }
+    .post-bg-image {
+    background-image: url('{{ post.image.url }}');
+  }
+</style>
+{% endblock %}

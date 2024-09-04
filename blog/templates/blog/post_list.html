@@ -1,0 +1,46 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8 text-center">Latest Posts</h1>
+    <div class="space-y-6 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+        {% for post in posts %}
+        <div class="relative overflow-hidden rounded-lg shadow-lg h-64 md:h-64 -mx-4 md:mx-0">
+            {% if post.image %}
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ post.image.url }}');">
+                <div class="absolute inset-0 bg-black opacity-30"></div>
+            </div>
+            {% else %}
+            <div class="absolute inset-0 bg-gray-200"></div>
+            {% endif %}
+            <div class="relative h-full p-6 flex flex-col justify-between">
+                <h2 class="text-xl font-semibold mb-2 text-white">{{ post.title }}</h2>
+                <div class="flex flex-col">
+                    <p class="text-sm text-gray-100 mb-4 md:mb-8">
+                        {{ post.content|striptags|truncatechars:120|safe }}
+                    </p>
+                    <a href="{% url 'post_detail' post.id %}" class="inline-block bg-blue-500 bg-opacity-85 hover:bg-opacity-100 text-white text-sm py-2 px-4 rounded transition duration-300 self-start">
+                        Read More
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var flashMessage = document.getElementById('flash-message');
+    if (flashMessage) {
+        setTimeout(function() {
+            flashMessage.style.transition = 'opacity 1s ease-out';
+            flashMessage.style.opacity = '0';
+            setTimeout(function() {
+                flashMessage.remove();
+            }, 1000);
+        }, 5000); // Message will stay for 5 seconds before fading out
+    }
+});
+</script>
+{% endblock %}

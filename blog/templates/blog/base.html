@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Blog{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat&display=swap" rel="stylesheet">
+    <style>
+        .handwritten {
+            font-family: 'Caveat', cursive;
+        }
+        .handwritten-link {
+            font-family: 'Caveat', cursive;
+            font-size: 1.4rem;
+            color: #3B82F6;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .handwritten-link:hover {
+            color: #2563EB;
+        }
+        .pulse-animation {
+            animation: pulse 3s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.24); }
+        }
+        .error {
+            background-color: #FEE2E2;
+            border-color: #F87171;
+            color: #991B1B;
+        }
+        .success {
+            background-color: #D1FAE5;
+            border-color: #34D399;
+            color: #065F46;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-screen bg-blue-50">
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <nav class="flex items-center space-x-4">
+                <a href="{% url 'post_list' %}" class="handwritten-link">Home</a>
+                <a href="{% url 'about' %}" class="handwritten-link">About</a>
+            </nav>
+            <div id="messages-container" class="max-w-6xl mx-auto mt-4">
+    </div>
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <span class="text-gray-600">Welcome, {{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="handwritten-link">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="handwritten-link">Login</a>
+                    <a href="{% url 'register' %}" class="handwritten-link">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }} bg-{{ message.tags }}-100 border-l-4 border-{{ message.tags }}-500 text-{{ message.tags }}-700 p-4 mb-4" role="alert">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <main class="container mx-auto mt-4 p-4 flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 relative z-0">
+            <p class="text-center text-sm text-gray-500">
+                Made with <span class="text-blue-500 pulse-animation inline-block">♥</span>
+                <br>© 2024 IreAV. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    {% block extra_scripts %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var messages = document.querySelectorAll('.message');
+        messages.forEach(function(message) {
+            setTimeout(function() {
+                message.style.transition = 'opacity 1s ease-out';
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.remove();
+                }, 1000);
+            }, 5000);
+        });
+    });
+    </script>
+    {% endblock %}
+</body>
+</html>

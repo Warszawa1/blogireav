@@ -1,0 +1,72 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    #id_content_toolbar button {
+        margin-right: 5px;
+        padding: 5px 10px;
+    }
+    #id_content_editor {
+        border: 1px solid #ccc;
+        min-height: 300px;
+        padding: 10px;
+        overflow-y: auto;
+    }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var toolbar = document.createElement('div');
+    toolbar.id = 'id_content_toolbar';
+    var textarea = document.getElementById('id_content');
+    textarea.parentNode.insertBefore(toolbar, textarea);
+
+    var buttons = [
+        { name: 'Bold', action: 'bold', icon: 'B' },
+        { name: 'Italic', action: 'italic', icon: 'I' },
+        { name: 'Underline', action: 'underline', icon: 'U' },
+        { name: 'Link', action: 'createLink', icon: '🔗' },
+    ];
+
+    buttons.forEach(function(button) {
+        var btn = document.createElement('button');
+        btn.textContent = button.icon;
+        btn.type = 'button';
+        btn.onclick = function() {
+            if (button.action === 'createLink') {
+                var url = prompt('Enter the URL:');
+                if (url) {
+                    document.execCommand(button.action, false, url);
+                }
+            } else {
+                document.execCommand(button.action, false, null);
+            }
+            editor.focus();
+            updateTextarea();
+        };
+        toolbar.appendChild(btn);
+    });
+
+    textarea.style.display = 'none';
+    var editor = document.createElement('div');
+    editor.id = 'id_content_editor';
+    editor.contentEditable = true;
+    editor.innerHTML = textarea.value;
+    textarea.parentNode.insertBefore(editor, textarea.nextSibling);
+
+    function updateTextarea() {
+        textarea.value = editor.innerHTML;
+    }
+
+    editor.oninput = updateTextarea;
+    editor.onblur = updateTextarea;
+
+    // Handle form submission
+    var form = textarea.form;
+    form.onsubmit = function() {
+        updateTextarea();
+    };
+});
+</script>
+{% endblock %}
