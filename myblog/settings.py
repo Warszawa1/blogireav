@@ -41,7 +41,8 @@ except ImportError:
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'blogireav.onrender.com']
+
 
 LOGIN_REDIRECT_URL = 'post_list'
 LOGOUT_REDIRECT_URL = 'post_list'
