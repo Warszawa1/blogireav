@@ -4,10 +4,9 @@
     "fields": {
       "title": "Day 1",
       "content": "Much better than one day, right? \n\nI will use this blog to keep track of my learning process, struggles, failures, advances while developing my little projects. \nFor now this blog is one of the little and not so little projects I am trying to create. \nPython, some JavaScript, Flask and Postgres are the tools.\n\nLet's start!\n\n",
-      "created_at": "2024-09-04T12:00:00Z",
       "author": "1",
-      "image": "static/first_step.png"
-
+      "created_at": "2024-09-04T12:00:00Z",
+      "image": "post_images/first_step.png"
     }
   }
 ]
