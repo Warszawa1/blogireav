@@ -164,7 +164,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'myblog' / 'staticfiles']
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Add this for WhiteNoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
