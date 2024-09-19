@@ -1,10 +1,12 @@
 from django.contrib import admin
 from django.db import models
 from .models import Post, Comment
+from .forms import PostForm
 
 # @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     change_form_template = 'admin/blog/custom_change_form.html'
+    form = PostForm
 
     # list_display = ('title', 'author', 'created_at', 'updated_at')
     # search_fields = ('title', 'content')

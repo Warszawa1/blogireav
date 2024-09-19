@@ -14,9 +14,7 @@
 
 
         {% if post.image %}
-        <div class="mt-6 flex justify-center">
-            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-auto rounded-lg shadow-md">
-        </div>
+            <img src="{% url 'serve_image' post.id %}" alt="{{ post.title }}">
         {% endif %}
     </div>
 

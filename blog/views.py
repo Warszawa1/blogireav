@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
+from django.http import HttpResponse
 from .models import Post, Comment
 from .forms import CommentForm, PostForm
 import smtplib
@@ -21,12 +22,6 @@ logger = logging.getLogger(__name__)
 
 def test_view(request):
     return HttpResponse("Test view is working!")
-
-# def post_list(request):
-#     logger.info(f"Entering post_list view")
-#     logger.info(f"Messages in post_list: {list(messages.get_messages(request))}")
-#     posts = Post.objects.all().order_by('-created_at')
-#     return render(request, 'blog/post_list.html', {'posts': posts})
 
 def post_list(request):
     print("Entering post_list view")
@@ -51,10 +46,6 @@ def post_detail(request, pk):
     else:
         comment_form = CommentForm()
 
-    if post.image:
-        print(f"Image path: {post.image.path}")
-        print(f"Image URL: {post.image.url}")
-
     return render(request, 'blog/post_detail.html', {
         'post': post,
         'comments': comments,
@@ -75,6 +66,14 @@ def post_create(request):
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
 
+def serve_image(request, post_id):
+    try:
+        post = Post.objects.get(pk=post_id)
+        if post.image:
+            return HttpResponse(post.image, content_type='image/jpeg')  # Adjust content_type if needed
+    except Post.DoesNotExist:
+        pass
+    return HttpResponse(status=404)
 
 @login_required
 def post_edit(request, pk):
