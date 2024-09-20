@@ -6,6 +6,8 @@ from .forms import PostForm
 # @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     form = PostForm
+    change_form_template = 'admin/blog/post/change_form.html'
+
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:  # This is a new object
