@@ -71,16 +71,11 @@ def serve_image(request, post_id):
     try:
         post = Post.objects.get(pk=post_id)
         if post.image:
-            # Guess the content type based on the image name
-            content_type, _ = mimetypes.guess_type(post.image_name)
-            if not content_type:
-                content_type = 'application/octet-stream'
-            logger.info(f"Serving image for post {post_id}")
-            return HttpResponse(post.image, content_type='image/jpeg')
-        else:
-            logger.warning(f"No image found for post {post_id}")
+            # Guess the content type based on the image name or default to jpeg
+            content_type = mimetypes.guess_type(post.image_name)[0] if post.image_name else 'image/jpeg'
+            return HttpResponse(post.image, content_type=content_type)
     except Post.DoesNotExist:
-        logger.error(f"Post {post_id} does not exist")
+        pass
     return HttpResponse(status=404)
 
 @login_required
