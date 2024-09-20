@@ -5,13 +5,17 @@ from .forms import PostForm
 
 # @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    change_form_template = 'admin/blog/custom_change_form.html'
     form = PostForm
 
     def save_model(self, request, obj, form, change):
-        if not obj.author:
+        if not obj.pk:  # This is a new object
             obj.author = request.user
-        obj.save()
+        super().save_model(request, obj, form, change)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['author'].initial = request.user
+        return form
 
 
 admin.site.register(Post, PostAdmin)

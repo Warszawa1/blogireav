@@ -16,7 +16,11 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'image']
+        fields = ['title', 'content', 'author', 'image']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['author'].widget = forms.HiddenInput()
 
     def save(self, commit=True):
         instance = super(PostForm, self).save(commit=False)
