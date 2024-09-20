@@ -14,6 +14,7 @@
         padding: 10px;
         overflow-y: auto;
         white-space: pre-wrap;
+        font-family: monospace;
     }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -79,6 +80,10 @@ document.addEventListener('DOMContentLoaded', function() {
             editor.contentEditable = true;
             previewMode = false;
         } else {
+            marked.setOptions({
+                breaks: true,
+                gfm: true
+            });
             editor.innerHTML = marked.parse(editor.textContent);
             editor.contentEditable = false;
             previewMode = true;
