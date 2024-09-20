@@ -70,9 +70,12 @@ def serve_image(request, post_id):
     try:
         post = Post.objects.get(pk=post_id)
         if post.image:
-            return HttpResponse(post.image, content_type='image/jpeg')  # Adjust content_type if needed
+            logger.info(f"Serving image for post {post_id}")
+            return HttpResponse(post.image, content_type='image/jpeg')
+        else:
+            logger.warning(f"No image found for post {post_id}")
     except Post.DoesNotExist:
-        pass
+        logger.error(f"Post {post_id} does not exist")
     return HttpResponse(status=404)
 
 @login_required
