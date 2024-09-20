@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from .models import Post, Comment
 from .forms import CommentForm, PostForm
 import smtplib
+import mimetypes
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.http import HttpResponse
@@ -70,6 +71,10 @@ def serve_image(request, post_id):
     try:
         post = Post.objects.get(pk=post_id)
         if post.image:
+            # Guess the content type based on the image name
+            content_type, _ = mimetypes.guess_type(post.image_name)
+            if not content_type:
+                content_type = 'application/octet-stream'
             logger.info(f"Serving image for post {post_id}")
             return HttpResponse(post.image, content_type='image/jpeg')
         else:

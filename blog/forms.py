@@ -24,8 +24,12 @@ class PostForm(forms.ModelForm):
         instance = super(PostForm, self).save(commit=False)
         image = self.cleaned_data.get('image')
         if image:
-            instance.image = image.file.read()
+            instance.image = image.read()
             instance.image_name = image.name
+        elif self.cleaned_data.get('image') is False:
+            # If the image is explicitly cleared in the form
+            instance.image = None
+            instance.image_name = None
         if commit:
             instance.save()
         return instance
