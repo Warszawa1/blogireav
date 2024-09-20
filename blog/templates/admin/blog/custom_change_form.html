@@ -62,6 +62,22 @@ document.addEventListener('DOMContentLoaded', function() {
     editor.oninput = updateTextarea;
     editor.onblur = updateTextarea;
 
+    // Handle pasting
+    editor.addEventListener('paste', function(e) {
+        e.preventDefault();
+        var clipboardData = e.clipboardData || window.clipboardData;
+        var pastedData = clipboardData.getData('Text');
+
+        // Create a temporary element to hold the pasted content
+        var tempDiv = document.createElement('div');
+        tempDiv.innerHTML = pastedData;
+
+        // Insert the HTML content
+        document.execCommand('insertHTML', false, tempDiv.innerHTML);
+
+        updateTextarea();
+    });
+
     // Handle form submission
     var form = textarea.form;
     form.onsubmit = function() {
