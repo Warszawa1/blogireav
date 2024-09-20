@@ -10,33 +10,26 @@ class CommentForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'rows': 4, 'class': 'w-full p-2 border rounded'}),
         }
 
+
 class PostForm(forms.ModelForm):
     image = forms.ImageField(required=False)
 
     class Meta:
         model = Post
         fields = ['title', 'content', 'image']
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'w-full p-2 border rounded'}),
-            'content': forms.Textarea(attrs={'rows': 8, 'class': 'w-full p-2 border rounded'}),
-        }
 
     def save(self, commit=True):
         instance = super(PostForm, self).save(commit=False)
         image = self.cleaned_data.get('image')
 
         if image:
-            # New image upload
-            if hasattr(image, 'read'):
-                instance.image = image.read()
-                instance.image_name = image.name
-            # Existing image data
-            elif isinstance(image, memoryview):
+            if isinstance(image, memoryview):
+                # If it's already a memoryview, just assign it
                 instance.image = image
-            elif isinstance(image, str) and image.startswith('data:image'):
-                # Handle base64 encoded image data if applicable
-                format, imgstr = image.split(';base64,')
-                instance.image = base64.b64decode(imgstr)
+            else:
+                # If it's a new file upload, read it
+                instance.image = image.read()
+            instance.image_name = getattr(image, 'name', None)
         elif self.cleaned_data.get('image') is False:
             # If the image is explicitly cleared in the form
             instance.image = None

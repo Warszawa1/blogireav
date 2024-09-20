@@ -8,10 +8,10 @@ class PostAdmin(admin.ModelAdmin):
     change_form_template = 'admin/blog/custom_change_form.html'
     form = PostForm
 
-    # list_display = ('title', 'author', 'created_at', 'updated_at')
-    # search_fields = ('title', 'content')
-    # list_filter = ('created_at', 'updated_at')
-    # date_hierarchy = 'created_at'
+    def save_model(self, request, obj, form, change):
+        if not obj.author:
+            obj.author = request.user
+        obj.save()
 
 
 admin.site.register(Post, PostAdmin)
