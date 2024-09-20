@@ -13,8 +13,10 @@
         min-height: 300px;
         padding: 10px;
         overflow-y: auto;
+        white-space: pre-wrap;
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var toolbar = document.createElement('div');
@@ -23,10 +25,11 @@ document.addEventListener('DOMContentLoaded', function() {
     textarea.parentNode.insertBefore(toolbar, textarea);
 
     var buttons = [
-        { name: 'Bold', action: 'bold', icon: 'B' },
-        { name: 'Italic', action: 'italic', icon: 'I' },
-        { name: 'Underline', action: 'underline', icon: 'U' },
-        { name: 'Link', action: 'createLink', icon: '🔗' },
+        { name: 'Bold', action: '**', icon: 'B' },
+        { name: 'Italic', action: '*', icon: 'I' },
+        { name: 'Link', action: '[](url)', icon: '🔗' },
+        { name: 'Code', action: '`', icon: '<>' },
+        { name: 'Preview', action: 'preview', icon: '👁️' }
     ];
 
     buttons.forEach(function(button) {
@@ -34,13 +37,10 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.textContent = button.icon;
         btn.type = 'button';
         btn.onclick = function() {
-            if (button.action === 'createLink') {
-                var url = prompt('Enter the URL:');
-                if (url) {
-                    document.execCommand(button.action, false, url);
-                }
+            if (button.action === 'preview') {
+                togglePreview();
             } else {
-                document.execCommand(button.action, false, null);
+                wrapText(editor, button.action);
             }
             editor.focus();
             updateTextarea();
@@ -52,15 +52,38 @@ document.addEventListener('DOMContentLoaded', function() {
     var editor = document.createElement('div');
     editor.id = 'id_content_editor';
     editor.contentEditable = true;
-    editor.innerHTML = textarea.value;
+    editor.textContent = textarea.value;
     textarea.parentNode.insertBefore(editor, textarea.nextSibling);
 
     function updateTextarea() {
-        textarea.value = editor.innerHTML;
+        textarea.value = editor.textContent;
     }
 
     editor.oninput = updateTextarea;
     editor.onblur = updateTextarea;
+
+    function wrapText(element, wrapper) {
+        var selection = window.getSelection();
+        var range = selection.getRangeAt(0);
+        var content = range.extractContents();
+        var span = document.createElement('span');
+        span.textContent = wrapper + content.textContent + wrapper;
+        range.insertNode(span);
+        updateTextarea();
+    }
+
+    var previewMode = false;
+    function togglePreview() {
+        if (previewMode) {
+            editor.innerHTML = editor.textContent;
+            editor.contentEditable = true;
+            previewMode = false;
+        } else {
+            editor.innerHTML = marked.parse(editor.textContent);
+            editor.contentEditable = false;
+            previewMode = true;
+        }
+    }
 
     // Handle pasting
     editor.addEventListener('paste', function(e) {
@@ -68,12 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var clipboardData = e.clipboardData || window.clipboardData;
         var pastedData = clipboardData.getData('Text');
 
-        // Create a temporary element to hold the pasted content
-        var tempDiv = document.createElement('div');
-        tempDiv.innerHTML = pastedData;
-
-        // Insert the HTML content
-        document.execCommand('insertHTML', false, tempDiv.innerHTML);
+        // Insert the text content
+        document.execCommand('insertText', false, pastedData);
 
         updateTextarea();
     });
