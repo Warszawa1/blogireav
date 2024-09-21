@@ -70,13 +70,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var span = document.createElement('span');
         span.textContent = wrapper + content.textContent + wrapper;
         range.insertNode(span);
+        selection.removeAllRanges();
+        selection.addRange(range);
         updateTextarea();
     }
 
     var previewMode = false;
     function togglePreview() {
         if (previewMode) {
-            editor.innerHTML = editor.textContent;
+            editor.textContent = editor.textContent; // This preserves line breaks
             editor.contentEditable = true;
             previewMode = false;
         } else {
@@ -105,6 +107,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle form submission
     var form = textarea.form;
     form.onsubmit = function() {
+        if (previewMode) {
+            togglePreview(); // Switch back to edit mode before submitting
+        }
         updateTextarea();
     };
 });

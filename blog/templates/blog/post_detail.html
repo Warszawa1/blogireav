@@ -7,7 +7,7 @@
         <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
         <div class="prose max-w-none mb-6">
             {% autoescape off %}
-                {{ post.content }}
+                {{ post.content|markdown|safe }}
             {% endautoescape %}
         </div>
         <p class="text-sm text-gray-600 mb-4">Posted by {{ post.author }} on {{ post.created_at|date:"F d, Y" }}</p>
