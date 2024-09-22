@@ -5,11 +5,10 @@
 <article class="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
     <div class="p-6">
         <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
-        <div class="prose max-w-none mb-6">
-            {% autoescape off %}
-                {{ post.content|markdown|safe }}
-            {% endautoescape %}
+        <div class="post-content">
+            {{ post.content }}
         </div>
+
         <p class="text-sm text-gray-600 mb-4">Posted by {{ post.author }} on {{ post.created_at|date:"F d, Y" }}</p>
 
 
