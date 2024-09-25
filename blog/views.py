@@ -72,15 +72,14 @@ def post_create(request):
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
 
-def serve_image(request, post_id):
-    try:
-        post = Post.objects.get(pk=post_id)
-        if post.image:
-            # Guess the content type based on the image name or default to jpeg
-            content_type = mimetypes.guess_type(post.image_name)[0] if post.image_name else 'image/jpeg'
-            return HttpResponse(post.image, content_type=content_type)
-    except Post.DoesNotExist:
-        pass
+def serve_image(request, post_id, size='large'):
+    post = get_object_or_404(Post, pk=post_id)
+    if size == 'small' and post.image_small:
+        return HttpResponse(post.image_small, content_type='image/jpeg')
+    elif size == 'medium' and post.image_medium:
+        return HttpResponse(post.image_medium, content_type='image/jpeg')
+    elif post.image:
+        return HttpResponse(post.image, content_type='image/jpeg')
     return HttpResponse(status=404)
 
 @login_required

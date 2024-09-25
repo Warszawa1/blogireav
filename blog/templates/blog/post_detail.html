@@ -12,7 +12,11 @@
         <p class="text-sm text-gray-600 mb-4">Posted by {{ post.author }} on {{ post.created_at|date:"F d, Y" }}</p>
 
         {% if post.image %}
-            <img src="{% url 'serve_image' post.id %}" alt="{{ post.title }}">
+        <picture>
+            <source media="(max-width: 640px)" srcset="{% url 'serve_image' post.id 'small' %}">
+            <source media="(max-width: 1024px)" srcset="{% url 'serve_image' post.id 'medium' %}">
+            <img src="{% url 'serve_image' post.id 'large' %}" alt="{{ post.title }}" class="w-full h-auto rounded-lg shadow-md object-cover">
+        </picture>
         {% endif %}
     </div>
 
