@@ -15,6 +15,8 @@ import mimetypes
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.http import HttpResponse
+from django.utils.safestring import mark_safe
+
 
 import logging
 
@@ -34,7 +36,8 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    post.content = post.content.replace('\n', '<br>')
+    post.content = mark_safe(post.content)
+
     comments = post.comments.all().order_by('-created_at')
 
 
