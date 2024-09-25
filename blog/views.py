@@ -34,8 +34,8 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    post.content = post.content.replace('\n', '<br>')
     comments = post.comments.all().order_by('-created_at')
-    print(f"Post content: {post.content[:100]}...")  # Print first 100 characters
 
 
     if request.method == 'POST':
