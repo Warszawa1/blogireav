@@ -7,7 +7,7 @@
     <div class="p-6">
         <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
         <div class="post-content">
-            {{ post.get_safe_content|truncatewords_html:30 }}
+            {{ post.content|linebreaks }}
         </div>
 
         <p class="text-sm text-gray-600 mb-4">Posted by {{ post.author }} on {{ post.created_at|date:"F d, Y" }}</p>
