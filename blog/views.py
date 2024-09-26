@@ -32,9 +32,27 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    next_post = Post.objects.filter(created_at__gt=post.created_at).order_by('created_at').first()
-    previous_post = Post.objects.filter(created_at__lt=post.created_at).order_by('-created_at').first()
-    return render(request, 'blog/post_detail.html', {'post': post, 'next_post': next_post, 'previous_post': previous_post})
+    post.content = mark_safe(post.content)
+
+    comments = post.comments.all().order_by('-created_at')
+
+
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = post
+            new_comment.author = request.user
+            new_comment.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        comment_form = CommentForm()
+
+    return render(request, 'blog/post_detail.html', {
+        'post': post,
+        'comments': comments,
+        'comment_form': comment_form,
+    })
 
 
 @login_required
