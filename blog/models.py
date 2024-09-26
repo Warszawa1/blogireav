@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
+from bleach import clean
+
 
 
 
@@ -30,6 +32,15 @@ class Post(models.Model):
                             save=False)
 
         super().save(*args, **kwargs)
+
+    def get_safe_content(self):
+        # Define allowed tags and attributes
+        allowed_tags = ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'span', 'div']
+        allowed_attributes = {'a': ['href', 'title'], 'span': ['style'], 'div': ['style']}
+
+        # Clean the content
+        cleaned_content = clean(self.content, tags=allowed_tags, attributes=allowed_attributes, strip=True)
+        return mark_safe(cleaned_content)
 
 
     def __str__(self):
