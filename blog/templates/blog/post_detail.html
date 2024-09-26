@@ -30,9 +30,7 @@
     </div>
         {% if post.image %}
         <picture>
-            <source media="(max-width: 640px)" srcset="{% url 'serve_image' post.id 'small' %}">
-            <source media="(max-width: 1024px)" srcset="{% url 'serve_image' post.id 'medium' %}">
-            <img src="{% url 'serve_image' post.id 'large' %}" alt="{{ post.title }}" class="w-full h-auto rounded-lg shadow-md object-cover">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="object-cover w-full h-full rounded-lg shadow-md">
         </picture>
         {% endif %}
     </div>
