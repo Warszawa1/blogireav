@@ -27,36 +27,14 @@ def test_view(request):
     return HttpResponse("Test view is working!")
 
 def post_list(request):
-    print("Entering post_list view")
     posts = Post.objects.all().order_by('-created_at')
-    print(f"Number of posts: {posts.count()}")
-    for post in posts:
-        print(f"Post: {post.title}")
     return render(request, 'blog/post_list.html', {'posts': posts})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    post.content = mark_safe(post.content)
-
-    comments = post.comments.all().order_by('-created_at')
-
-
-    if request.method == 'POST':
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.post = post
-            new_comment.author = request.user
-            new_comment.save()
-            return redirect('post_detail', pk=post.pk)
-    else:
-        comment_form = CommentForm()
-
-    return render(request, 'blog/post_detail.html', {
-        'post': post,
-        'comments': comments,
-        'comment_form': comment_form,
-    })
+    next_post = Post.objects.filter(created_at__gt=post.created_at).order_by('created_at').first()
+    previous_post = Post.objects.filter(created_at__lt=post.created_at).order_by('-created_at').first()
+    return render(request, 'blog/post_detail.html', {'post': post, 'next_post': next_post, 'previous_post': previous_post})
 
 
 @login_required
@@ -72,14 +50,15 @@ def post_create(request):
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
 
-def serve_image(request, post_id, size='large'):
-    post = get_object_or_404(Post, pk=post_id)
-    if size == 'small' and post.image_small:
-        return HttpResponse(post.image_small, content_type='image/jpeg')
-    elif size == 'medium' and post.image_medium:
-        return HttpResponse(post.image_medium, content_type='image/jpeg')
-    elif post.image:
-        return HttpResponse(post.image, content_type='image/jpeg')
+def serve_image(request, post_id):
+    try:
+        post = Post.objects.get(pk=post_id)
+        if post.image:
+            # Guess the content type based on the image name or default to jpeg
+            content_type = mimetypes.guess_type(post.image_name)[0] if post.image_name else 'image/jpeg'
+            return HttpResponse(post.image, content_type=content_type)
+    except Post.DoesNotExist:
+        pass
     return HttpResponse(status=404)
 
 @login_required
