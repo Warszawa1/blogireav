@@ -11,6 +11,25 @@
         </div>
 
         <p class="text-sm text-gray-600 mb-4">Posted by {{ post.author }} on {{ post.created_at|date:"F d, Y" }}</p>
+           <!-- Navigation Arrows -->
+        <div class="flex justify-between mt-8">
+            {% if previous_post %}
+            <a href="{% url 'post_detail' previous_post.pk %}" class="text-blue-500 hover:text-blue-700 text-sm sm:text-base">
+                ← Previous
+            </a>
+            {% else %}
+            <span></span>
+            {% endif %}
+
+            {% if next_post %}
+            <a href="{% url 'post_detail' next_post.pk %}" class="text-blue-500 hover:text-blue-700 text-sm sm:text-base">
+                Next →
+            </a>
+            {% else %}
+            <span></span>
+            {% endif %}
+        </div>
+
 
         {% if post.image %}
             <img src="data:image/jpeg;base64,{{ post.image|b64encode }}" alt="{{ post.title }}" class="w-full h-auto">
