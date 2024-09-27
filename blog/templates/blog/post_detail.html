@@ -11,7 +11,13 @@
         </div>
 
         <p class="text-sm text-gray-600 mb-4">Posted by {{ post.author }} on {{ post.created_at|date:"F d, Y" }}</p>
-           <!-- Navigation Arrows -->
+        <!-- Navigation Arrows -->
+
+        <!-- Add this somewhere in your template for debugging -->
+        <div class="debug-info" style="display: none;">
+            Previous Post: {{ previous_post.title|default:"None" }}
+            Next Post: {{ next_post.title|default:"None" }}
+        </div>
         <div class="flex justify-between mt-8">
             {% if previous_post %}
             <a href="{% url 'post_detail' previous_post.pk %}" class="text-blue-500 hover:text-blue-700 text-sm sm:text-base">
