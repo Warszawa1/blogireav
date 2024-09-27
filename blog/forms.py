@@ -1,6 +1,5 @@
 from django import forms
 from .models import Comment, Post
-import base64
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -12,8 +11,6 @@ class CommentForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
-    image = forms.ImageField(required=False)
-
     class Meta:
         model = Post
         fields = ['title', 'content', 'author', 'image']

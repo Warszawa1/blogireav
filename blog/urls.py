@@ -10,5 +10,5 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),  # Use custom login view
     path('logout/', views.logout_view, name='logout'),  # Updated to use custom logout view
     path('about/', views.about, name='about'),
-    path('serve_image/<int:post_id>/', views.serve_image, name='serve_image'),
+    path('post/new/', views.post_create, name='post_create'),
 ]
