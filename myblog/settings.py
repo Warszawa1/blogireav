@@ -80,9 +80,9 @@ LANGUAGE_CODE = 'en-us'  # Default language
 
 
 ROOT_URLCONF = 'myblog.urls'
-#
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 TEMPLATES = [
     {
