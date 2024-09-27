@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 from django.http import HttpResponse
+from django.db.models import Q
 from .models import Post, Comment
 from .forms import CommentForm, PostForm
 import smtplib
@@ -34,6 +35,16 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.content = mark_safe(post.content)
 
+    # Get the next post
+    next_post = Post.objects.filter(Q(created_at__gt=post.created_at) |
+                                    (Q(created_at=post.created_at) & Q(id__gt=post.id))
+                                    ).order_by('created_at', 'id').first()
+
+    # Get the previous post
+    previous_post = Post.objects.filter(Q(created_at__lt=post.created_at) |
+                                        (Q(created_at=post.created_at) & Q(id__lt=post.id))
+                                        ).order_by('-created_at', '-id').first()
+
     comments = post.comments.all().order_by('-created_at')
 
 
@@ -44,15 +55,20 @@ def post_detail(request, pk):
             new_comment.post = post
             new_comment.author = request.user
             new_comment.save()
-            return redirect('post_detail', pk=post.pk)
+            comment_form = CommentForm()
+            # return redirect('post_detail', pk=post.pk)
     else:
         comment_form = CommentForm()
 
-    return render(request, 'blog/post_detail.html', {
+    context = {
         'post': post,
+        'next_post': next_post,
+        'previous_post': previous_post,
         'comments': comments,
         'comment_form': comment_form,
-    })
+    }
+
+    return render(request, 'blog/post_detail.html', context)
 
 
 @login_required
