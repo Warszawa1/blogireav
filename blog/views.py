@@ -24,9 +24,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def test_view(request):
-    return HttpResponse("Test view is working!")
-
 def post_list(request):
     posts = Post.objects.all().order_by('-created_at')
     return render(request, 'blog/post_list.html', {'posts': posts})
@@ -85,14 +82,9 @@ def post_create(request):
     return render(request, 'blog/post_form.html', {'form': form})
 
 def serve_image(request, post_id):
-    try:
-        post = Post.objects.get(pk=post_id)
-        if post.image:
-            # Guess the content type based on the image name or default to jpeg
-            content_type = mimetypes.guess_type(post.image_name)[0] if post.image_name else 'image/jpeg'
-            return HttpResponse(post.image, content_type=content_type)
-    except Post.DoesNotExist:
-        pass
+    post = get_object_or_404(Post, pk=post_id)
+    if post.image:
+        return HttpResponse(post.image, content_type='image/jpeg')
     return HttpResponse(status=404)
 
 @login_required

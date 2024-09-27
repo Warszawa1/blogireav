@@ -38,7 +38,7 @@
 
 
         {% if post.image %}
-            <img src="{{ post.image_url }}" alt="{{ post.title }}">
+            <img src="{% url 'serve_image' post.id %}" alt="{{ post.title }}">
         {% endif %}
     </div>
 
