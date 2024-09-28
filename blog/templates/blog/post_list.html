@@ -6,6 +6,8 @@
     .post-card {
         position: relative;
         overflow: hidden;
+        background-color: rgba(200, 200, 200, 0.8); /* Light grey background */
+
     }
     .post-content {
         position: relative;
@@ -62,16 +64,16 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var flashMessage = document.getElementById('flash-message');
-    if (flashMessage) {
-        setTimeout(function() {
-            flashMessage.style.transition = 'opacity 1s ease-out';
-            flashMessage.style.opacity = '0';
-            setTimeout(function() {
-                flashMessage.remove();
-            }, 1000);
-        }, 5000); // Message will stay for 5 seconds before fading out
-    }
+<!--    var flashMessage = document.getElementById('flash-message');-->
+<!--    if (flashMessage) {-->
+<!--        setTimeout(function() {-->
+<!--            flashMessage.style.transition = 'opacity 1s ease-out';-->
+<!--            flashMessage.style.opacity = '0';-->
+<!--            setTimeout(function() {-->
+<!--                flashMessage.remove();-->
+<!--            }, 1000);-->
+<!--        }, 5000); // Message will stay for 5 seconds before fading out-->
+<!--    }-->
 
     const postCards = document.querySelectorAll('.post-card');
 
