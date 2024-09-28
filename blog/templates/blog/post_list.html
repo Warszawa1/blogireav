@@ -3,8 +3,30 @@
 
 {% block content %}
 <style>
-    .text-shadow {
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    .post-card {
+        position: relative;
+        overflow: hidden;
+    }
+    .post-content {
+        position: relative;
+        z-index: 10;
+        transition: opacity 0.3s ease;
+    }
+    .post-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .post-card:hover .post-image {
+        opacity: 1;
+    }
+    .post-card:hover .post-content {
+        opacity: 0;
     }
 </style>
 <div class="container mx-auto px-4 py-8">
@@ -14,15 +36,15 @@
         <div class="relative overflow-hidden rounded-lg shadow-lg h-64 md:h-64">
             <div class="relative h-64 overflow-hidden">
                 {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="absolute inset-0 w-full h-full opacity-85 object-cover">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="absolute inset-0 w-full h-full object-cover">
                 {% else %}
                     <div class="absolute inset-0 bg-gray-200"></div>
                 {% endif %}
-                <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                <div class="absolute inset-0 bg-black opacity-30"></div>
                 <div class="relative h-full p-6 flex flex-col justify-between">
-                    <h2 class="text-xl font-semibold mb-2 text-white text-shadow">{{ post.title }}</h2>
+                    <h2 class="text-xl font-semibold mb-2 text-white">{{ post.title }}</h2>
                     <div class="flex flex-col">
-                        <p class="text-sm text-gray-100 mb-4 md:mb-8 text-shadow">
+                        <p class="text-sm text-gray-100 mb-4 md:mb-8">
                             {{ post.get_safe_content|striptags|truncatechars:100 }}
                         </p>
                         <div class="flex justify-end mt-16">
@@ -50,6 +72,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 1000);
         }, 5000); // Message will stay for 5 seconds before fading out
     }
+
+    const postCards = document.querySelectorAll('.post-card');
+
+    postCards.forEach(card => {
+        let timeoutId;
+
+        card.addEventListener('mouseenter', () => {
+            clearTimeout(timeoutId);
+            card.classList.add('hovered');
+        });
+
+        card.addEventListener('mouseleave', () => {
+            timeoutId = setTimeout(() => {
+                card.classList.remove('hovered');
+            }, 2000);
+        });
+    });
 });
 </script>
 {% endblock %}
