@@ -4,18 +4,22 @@
 {% block content %}
 <style>
     body {
-        background-color: rgba(0, 0, 0, 0.8); /* Adjust this value to make the background more or less faded */
+        /* Remove the background-color from here as it's now in base.html */
     }
     .post-card {
-        background-color: rgba(255, 255, 255, 0.1); /* Transparent white background */
-        backdrop-filter: blur(5px); /* Adds a slight blur effect */
+        background-color: rgba(255, 255, 255, 0.15); /* Slightly more opaque */
+        backdrop-filter: blur(8px); /* Increased blur for better readability */
         transition: all 0.3s ease;
     }
     .post-card:hover {
-        background-color: rgba(255, 255, 255, 0.2); /* Slightly more opaque on hover */
+        background-color: rgba(255, 255, 255, 0.25); /* More opaque on hover */
     }
     .post-content {
         color: white;
+    }
+    /* Improve text readability */
+    h1, h2, p {
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     }
 </style>
 <div class="container mx-auto px-4 py-8">
@@ -25,7 +29,7 @@
         <div class="post-card rounded-lg shadow-lg overflow-hidden">
             <div class="p-6">
                 <h2 class="text-xl font-semibold mb-2 text-white">{{ post.title }}</h2>
-                <p class="text-sm text-gray-200 mb-4">
+                <p class="text-sm text-white-200 mb-4">
                     {{ post.get_safe_content|striptags|truncatechars:100 }}
                 </p>
                 <div class="flex justify-end mt-4">
