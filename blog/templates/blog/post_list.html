@@ -25,7 +25,7 @@
         <div class="post-card rounded-lg shadow-lg overflow-hidden">
             <div class="relative h-full p-6 flex flex-col justify-between">
             <h2 class="text-xl font-semibold mb-2 text-white">{{ post.title }}</h2>
-                <p class="text-sm text-white mb-4 md:mb-4">
+                <p class="text-sm text-white mb-4">
                     {{ post.get_safe_content|striptags|truncatechars:100 }}
                 </p>
                 <div class="flex justify-end mt-4">
